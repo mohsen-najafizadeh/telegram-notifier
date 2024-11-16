@@ -8,8 +8,13 @@ A simple PHP package for sending messages to Telegram using the Telegram Bot API
 You can install the package via Composer:
 
 ```bash
-composer require mohsen-najafizadeh/laravel-telegram-notifier
+composer require mohsen-najafizadeh/telegram-notifier
 ```
+
+## Requirements
+
+- **PHP version 7.2 and above**  
+- **cURL extension enabled** for making requests to the Telegram API.
 
 ## Usage
 
@@ -40,6 +45,15 @@ if ($response->getStatusCode() === 200) {
     https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates
     ```
 - **$parseMode** *(string|null)*: Optional parameter to specify the parse mode. Valid values are `HTML`, `Markdown`, `MarkdownV2`.
+
+## Error Handling and Common Issues
+
+- Ensure that the bot token is correctly configured.
+- Check that the chat ID is valid and that the bot has access to the chat.
+
+## Contributing
+
+If you would like to contribute to the development of this project, please submit your pull requests with sufficient explanations. Your feedback, bug reports, and suggestions are highly appreciated.
 
 ## License
 
