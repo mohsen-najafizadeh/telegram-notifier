@@ -10,10 +10,15 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use MohsenNajafizadeh\TelegramNotifier\Exceptions\TelegramException;
 use MohsenNajafizadeh\TelegramNotifier\Telegram;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 class TelegramTest extends TestCase
 {
+    /**
+     * @throws TelegramException
+     */
     public function testSendMessageSuccess()
     {
         $responseBody = json_encode([
@@ -21,11 +26,11 @@ class TelegramTest extends TestCase
             'result' => [
                 'chat' => [
                     'id' => -1001234567890,
-                    'title' => 'telegram channel name',
+                    'title' => 'Telegram channel name',
                     'type' => 'channel',
                 ],
-                'text' => 'test message',
-                'message_id' => 17979,
+                'text' => 'message',
+                'message_id' => 12345,
                 'date' => 1731823910,
             ],
         ]);
@@ -37,106 +42,83 @@ class TelegramTest extends TestCase
         $mockClient = new Client(['handler' => $handlerStack]);
 
         $result = Telegram::sendMessage(
-            'test message',
-            'fake-bot-token',
-            '-1001234567890',
+            'message',
+            'bot-token',
+            'chat-id',
             null,
             ['client' => $mockClient]
         );
 
-        $this->assertEquals(200, $result['header-code']);
-        $this->assertEquals('success', $result['status']);
-        $this->assertEquals('Message sent!', $result['message']);
+        $this->assertSame(200, $result['header-code']);
+        $this->assertSame('success', $result['status']);
+        $this->assertSame('Message sent!', $result['message']);
+        $this->assertSame(12345, $result['data']['message_id']);
     }
 
-    public function testSendMessageChatIdError()
+    /**
+     * @throws TelegramException
+     */
+    #[DataProvider('sendMessageRequiredArgumentsProvider')]
+    public function testSendMessageRequiredArguments($arg1, $arg2, $arg3)
     {
-        $this->expectException(TelegramException::class);
-        $this->expectExceptionMessageMatches('/400 Bad Request/');
-        $this->expectExceptionMessageMatches('/Bad Request: chat not found/');
+        $this->expectException(TypeError::class);
 
+        Telegram::sendMessage($arg1, $arg2, $arg3);
+    }
+
+    public static function sendMessageRequiredArgumentsProvider(): array
+    {
+        return [
+            [null, 'bot-token', 'chat-id'],
+            ['message', null, 'chat-id'],
+            ['message', 'bot-token', null],
+        ];
+    }
+
+    /**
+     * @throws TelegramException
+     */
+    #[DataProvider('sendMessageInvalidArgumentsProvider')]
+    public function testSendMessageInvalidArguments($errorCode)
+    {
+        $description = 'Error';
+        $this->expectException(TelegramException::class);
+        $this->expectExceptionCode($errorCode);
+        $this->expectExceptionMessageMatches('/' . $description . '/');
 
         $responseBody = json_encode([
             'ok' => false,
-            'error_code' => 400,
-            'description' => 'Bad Request: chat not found',
+            'error_code' => $errorCode,
+            'description' => $description,
         ]);
 
         $mockHandler = new MockHandler([
-            new Response(400, [], $responseBody),
+            new Response($errorCode, [], $responseBody),
         ]);
         $handlerStack = HandlerStack::create($mockHandler);
         $mockClient = new Client(['handler' => $handlerStack]);
 
         Telegram::sendMessage(
-            'Test message',
-            'fake-bot-token',
-            'invalid-chat-id',
+            'message',
+            'bot-token',
+            'chat-id',
             null,
             ['client' => $mockClient]
         );
     }
 
-    public function testSendMessageInvalidBotToken()
+    public static function sendMessageInvalidArgumentsProvider(): array
     {
-        $this->expectException(TelegramException::class);
-        $this->expectExceptionMessageMatches('/401 Unauthorized/');
-        $this->expectExceptionMessageMatches('/Unauthorized/');
-
-        $responseBody = json_encode([
-            'ok' => false,
-            'error_code' => 401,
-            'description' => 'Unauthorized',
-        ]);
-
-        $mockHandler = new MockHandler([
-            new Response(401, [], $responseBody),
-        ]);
-        $handlerStack = HandlerStack::create($mockHandler);
-        $mockClient = new Client(['handler' => $handlerStack]);
-
-        Telegram::sendMessage(
-            'Test message',
-            'invalid-bot-token',
-            'valid-chat-id',
-            null,
-            ['client' => $mockClient]
-        );
-    }
-
-    public function testSendMessageInvalidParseMode()
-    {
-        $responseBody = json_encode([
-            'ok' => true,
-            'result' => [
-                'chat' => [
-                    'id' => 'valid-chat-id',
-                    'title' => 'telegram channel',
-                    'type' => 'channel',
-                ],
-                'text' => 'test message',
-                'message_id' => 17980,
-                'date' => 1731824088,
-            ],
-        ]);
-
-        $mockHandler = new MockHandler([
-            new Response(200, [], $responseBody),
-        ]);
-        $handlerStack = HandlerStack::create($mockHandler);
-        $mockClient = new Client(['handler' => $handlerStack]);
-
-        $result = Telegram::sendMessage(
-            'test message',
-            'fake-bot-token',
-            'valid-chat-id',
-            'invalid_parse_mode',
-            ['client' => $mockClient]
-        );
-
-        $this->assertEquals(200, $result['header-code']);
-        $this->assertEquals('success', $result['status']);
-        $this->assertEquals('Message sent!', $result['message']);
+        return [
+            [400],
+            [401],
+            [403],
+            [404],
+            [500],
+            [502],
+            [503],
+            [504],
+        ];
     }
 
     public function testSendMessageJsonDecodeError()
@@ -145,15 +127,15 @@ class TelegramTest extends TestCase
         $this->expectExceptionMessageMatches('/JSON decoding error/');
 
         $mockHandler = new MockHandler([
-            new Response(200, [], 'invalid_json'),
+            new Response(200, [], 'Invalid json'),
         ]);
         $handlerStack = HandlerStack::create($mockHandler);
         $mockClient = new Client(['handler' => $handlerStack]);
 
         Telegram::sendMessage(
-            'test message',
-            'fake-bot-token',
-            'valid-chat-id',
+            'message',
+            'bot-token',
+            'chat-id',
             null,
             ['client' => $mockClient]
         );
@@ -165,15 +147,15 @@ class TelegramTest extends TestCase
         $this->expectExceptionMessageMatches('/Failed to send message to Telegram/');
 
         $mockHandler = new MockHandler([
-            new RequestException('Network error', new Request('POST', 'test')),
+            new RequestException('Network error', new Request('POST', '')),
         ]);
         $handlerStack = HandlerStack::create($mockHandler);
         $mockClient = new Client(['handler' => $handlerStack]);
 
         Telegram::sendMessage(
-            'test message',
-            'fake-bot-token',
-            'invalid-chat-id',
+            'message',
+            'bot-token',
+            'chat-id',
             null,
             ['client' => $mockClient]
         );
