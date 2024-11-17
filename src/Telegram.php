@@ -9,12 +9,18 @@ use MohsenNajafizadeh\TelegramNotifier\Exceptions\TelegramException;
 class Telegram
 {
     /**
+     * @param string $message
+     * @param string $botToken
+     * @param string $chatId
+     * @param string|null $parseMode
+     * @param array $clientConfig
+     * @return array
      * @throws TelegramException
      */
     public static function sendMessage(string $message, string $botToken, string $chatId, ?string $parseMode = null, array $clientConfig = []): array
     {
         $defaultConfig = [
-            'base_uri' => 'https://api.telegram.org/',
+            'base_uri' => 'https://api.telegram.org',
             'timeout' => 5.0
         ];
         $client = new Client(array_merge($defaultConfig, $clientConfig));
@@ -30,7 +36,7 @@ class Telegram
 
         try {
             /** @noinspection PhpUnnecessaryCurlyVarSyntaxInspection */
-            $response = $client->post("bot{$botToken}/sendMessage", [
+            $response = $client->post("/bot{$botToken}/sendMessage", [
                 'form_params' => $formParams,
             ]);
         } catch (GuzzleException $e) {
