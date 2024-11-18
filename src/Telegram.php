@@ -23,7 +23,7 @@ class Telegram
             'base_uri' => 'https://api.telegram.org',
             'timeout' => 5.0
         ];
-        $client = new Client(array_merge($defaultConfig, $clientConfig));
+        $client = $clientConfig['client'] ?? new Client(array_merge($defaultConfig, $clientConfig));
 
         $formParams = [
             'text' => $message,
