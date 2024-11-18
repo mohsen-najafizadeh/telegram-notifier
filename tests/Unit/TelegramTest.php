@@ -59,11 +59,11 @@ class TelegramTest extends TestCase
      * @throws TelegramException
      */
     #[DataProvider('sendMessageRequiredArgumentsProvider')]
-    public function testSendMessageRequiredArguments($arg1, $arg2, $arg3)
+    public function testSendMessageRequiredArguments($message, $botToken, $chatId)
     {
         $this->expectException(TypeError::class);
 
-        Telegram::sendMessage($arg1, $arg2, $arg3);
+        Telegram::sendMessage($message, $botToken, $chatId);
     }
 
     public static function sendMessageRequiredArgumentsProvider(): array
