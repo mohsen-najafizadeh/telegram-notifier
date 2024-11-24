@@ -16,7 +16,7 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
-## [2.0.0] - Added Unit Tests and Updated PHP Version
+## [2.0.0] - Added Unit Tests, Documentation, and Updated PHP Version
 ### Added
 - Comprehensive unit tests for the `sendMessage` method, covering:
     - Successful message sending.
@@ -24,6 +24,7 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 - Improved error messages:
     - Detailed exception messages include HTTP status codes and Telegram API descriptions.
 - Support for customizable HTTP client configuration (`clientConfig`).
+- Documentation, including installation and usage instructions.
 
 ### Changed
 - PHP version requirement updated to PHP 8.0 due to limitations in PHPUnit and the testing process.
@@ -35,7 +36,6 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 ### Planned
-- Add documentation for version 2.0.0, including installation and usage instructions.
 - Introduce a Dockerfile for containerized deployment of the package.
 - Transition to maintenance mode:
     - Actively maintain the package for updates and compatibility.
