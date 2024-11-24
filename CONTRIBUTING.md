@@ -5,7 +5,7 @@ Thank you for considering contributing to the TelegramNotifier package! We welco
 ## How to Contribute
 
 ### 1. Reporting Issues
-- Before reporting an issue, please check the [issue tracker](https://github.com/your-repo/issues) to ensure it hasn’t been reported already.
+- Before reporting an issue, please check [the issues](https://github.com/mohsen-najafizadeh/telegram-notifier/issues) to ensure it hasn’t been reported already.
 - If you find an issue, please include:
     - A clear and descriptive title.
     - Steps to reproduce the problem.
@@ -21,13 +21,11 @@ Thank you for considering contributing to the TelegramNotifier package! We welco
 - Ensure your code adheres to the project's coding standards.
 - Add or update tests for any new functionality.
 - Run all tests to ensure they pass.
-- Update `README.md` or other documentation if applicable.
+- Update [`README.md`](README.md) or other documentation if applicable.
 - Submit your pull request with a clear and concise description of your changes.
-
-### 4. Code of Conduct
-By contributing, you agree to adhere to our [Code of Conduct](https://github.com/your-repo/CODE_OF_CONDUCT.md).
 
 ### Development Workflow
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo/telegram-notifier.git
+   git clone https://github.com/mohsen-najafizadeh/telegram-notifier.git
+    ```
