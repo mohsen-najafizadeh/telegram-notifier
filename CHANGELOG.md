@@ -5,6 +5,25 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [v1.0.2] - Added Docker Support for Contributors and Updated PHP Version
+
+### Added
+- Dockerfile for creating a Docker image of the package.
+- `docker-compose.yml` for easier container management.
+- Documentation for using Docker with the package.
+
+### Changed
+- Updated PHP version requirement in `composer.json` from `^8.0` to `^8.2`.
+- Replaced the existing `composer.lock` file with the one generated in the Docker container.
+
+---
+
+## [v1.0.1] - Add link to documentation in README
+### Added
+- Link to the [documentation](https://mohsen-najafizadeh.github.io/telegram-notifier/) in the `README.md`.
+
+---
+
 ## [v1.0.0] - Initial Release
 ### Added
 - Initial implementation of the Telegram Notifier package.

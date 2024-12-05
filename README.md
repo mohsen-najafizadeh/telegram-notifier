@@ -33,6 +33,9 @@ $response = Telegram::sendMessage($message, $botToken, $chatId);
 ```
 For detailed documentation and examples, refer to the [Documentation](DOCUMENTATION.md) /  [Documentation that created by PHPDocumentor](https://mohsen-najafizadeh.github.io/telegram-notifier/).
 
+## Contribution
+If you want to contribute to the project, please read the [Contributing Guidelines](CONTRIBUTING.md).
+
 ## License
 
 This package is open-sourced software licensed under the [MIT license](LICENSE).
