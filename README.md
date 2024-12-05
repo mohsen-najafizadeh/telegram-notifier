@@ -31,7 +31,7 @@ use MohsenNajafizadeh\TelegramNotifier\Telegram;
 
 $response = Telegram::sendMessage($message, $botToken, $chatId);
 ```
-For detailed documentation and examples, refer to the [Documentation](DOCUMENTATION.md).
+For detailed documentation and examples, refer to the [Documentation](DOCUMENTATION.md) /  [Documentation that created by PHPDocumentor](https://mohsen-najafizadeh.github.io/telegram-notifier/).
 
 ## License
 
