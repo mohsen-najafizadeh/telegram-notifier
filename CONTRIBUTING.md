@@ -1,6 +1,9 @@
+
 # Contributing to TelegramNotifier
 
 Thank you for considering contributing to the TelegramNotifier package! We welcome contributions of all kinds, including bug reports, feature suggestions, and pull requests.
+
+---
 
 ## How to Contribute
 
@@ -27,21 +30,37 @@ Thank you for considering contributing to the TelegramNotifier package! We welco
 - Update [`README.md`](README.md) or other documentation if applicable.
 - Submit your pull request to the `develop` branch with a clear and concise description of your changes.
 
-### Development Workflow
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/mohsen-najafizadeh/telegram-notifier.git
-    ```
-2. Switch to the `develop` branch:
-    ```bash
-    git checkout develop
-    ```
-3. Install dependencies and set up the project as needed.
+---
 
-### Notes
-- All development work should be done on the `develop` branch. The `main` branch is reserved for stable releases.
+## Development Workflow
+
+To ensure consistency across all contributors, the development environment is Dockerized.
+
+### 1. Clone the Repository
+   ```bash
+      git clone https://github.com/mohsen-najafizadeh/telegram-notifier.git
+      cd telegram-notifier
+   ```
+
+### 2. Build and Run the Docker Container
+   ```bash
+      docker-compose up --build
+   ```
+
+### 3. Access the Development Container
+   ```bash
+      docker exec -it telegram-notifier-dev /bin/bash
+   ```
+
+### 4. Stop the Container
+   ```bash
+      docker-compose down
+   ```
+
+### Notes on Development
+- All development work should be done inside the Docker container to maintain consistency across environments.
+- The `develop` branch is used for ongoing work. The `main` branch is reserved for stable releases.
 - Follow [Semantic Versioning](https://semver.org/) when introducing changes that impact the public API.
-- Ensure your pull request is properly rebased onto the latest `develop` branch before submission.
 
 ---
 

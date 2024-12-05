@@ -3,7 +3,7 @@
   "description": "A PHP package that handles API requests and sends notifications to Telegram seamlessly.",
   "type": "library",
   "require": {
-    "php": ">=8.0",
+    "php": "^8.2",
     "guzzlehttp/guzzle": "^7.0",
     "ext-json": "*"
   },
