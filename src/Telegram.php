@@ -39,8 +39,12 @@ class Telegram
             $response = $client->post("/bot{$botToken}/sendMessage", [
                 'form_params' => $formParams,
             ]);
-        } catch (GuzzleException $e) {
-            throw new TelegramException("Failed to send message to Telegram: " . $e->getMessage(), $e->getCode(), $e);
+        } catch (TelegramException $e) {
+            return [
+                'header-code' => $e->getCode(),
+                'status' => 'error',
+                'message' => "Failed to send message to Telegram: " . $e->getMessage(),
+            ];
         }
 
         $body = json_decode($response->getBody(), true);
@@ -58,9 +62,10 @@ class Telegram
             ];
         }
 
-        throw new TelegramException(
-            "Telegram API error: " . ($body['description'] ?? 'Unknown error'),
-            $body['error_code'] ?? 500
-        );
+        return [
+            'header-code' => $body['error_code'] ?? 422,
+            'status' => 'error',
+            'message' => $body['description'] ?? 'Unknown error',
+        ];
     }
 }
