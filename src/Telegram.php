@@ -3,7 +3,7 @@
 namespace MohsenNajafizadeh\TelegramNotifier;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\ClientException;
 use MohsenNajafizadeh\TelegramNotifier\Exceptions\TelegramException;
 
 class Telegram
@@ -39,33 +39,30 @@ class Telegram
             $response = $client->post("/bot{$botToken}/sendMessage", [
                 'form_params' => $formParams,
             ]);
+            $body = json_decode($response->getBody()->getContents(), true);
+
+            return [
+                'headerCode' => $response->getStatusCode(),
+                'status' => 'success',
+                'message' => 'Message sent successfully!',
+                'data' => $body['result']
+            ];
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+            $statusCode = $response->getStatusCode();
+            $body = json_decode($response->getBody()->getContents(), true);
+
+            return [
+                'headerCode' => $statusCode,
+                'status' => 'error',
+                'message' => $body['description'],
+            ];
         } catch (TelegramException $e) {
             return [
-                'header-code' => $e->getCode(),
+                'headerCode' => 500,
                 'status' => 'error',
-                'message' => "Failed to send message to Telegram: " . $e->getMessage(),
+                'message' => "An unexpected error occurred: " . $e->getMessage(),
             ];
         }
-
-        $body = json_decode($response->getBody(), true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new TelegramException("JSON decoding error: " . json_last_error_msg());
-        }
-
-        if (isset($body['ok']) && $body['ok'] === true) {
-            return [
-                'header-code' => 200,
-                'status' => 'success',
-                'message' => 'Message sent!',
-                'data' => $body['result'] ?? [],
-            ];
-        }
-
-        return [
-            'header-code' => $body['error_code'] ?? 422,
-            'status' => 'error',
-            'message' => $body['description'] ?? 'Unknown error',
-        ];
     }
 }
