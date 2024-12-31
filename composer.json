@@ -13,6 +13,11 @@
       "MohsenNajafizadeh\\TelegramNotifier\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "MohsenNajafizadeh\\TelegramNotifier\\Tests\\": "tests/"
+    }
+  },
   "authors": [
     {
       "name": "Peyman Manteali",
