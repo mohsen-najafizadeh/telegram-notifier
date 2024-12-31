@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [v1.1.0] - Updated error handling behavior in `sendMessage` method and improved tests
+
+### Changed
+- Revised error handling behavior for `sendMessage` to align with expected structured responses.
+- Updated unit tests to reflect the new error handling changes, ensuring accurate simulation of Telegram API responses.
+- Refactored `testSendMessageTelegramException` to properly validate scenarios involving server errors.
+
+### Notes
+- This release includes breaking changes in the behavior of error handling for invalid or missing parameters. Developers using the package should review their implementation to ensure compatibility.
+---
 
 ## [v1.0.2] - Added Docker Support for Contributors and Updated PHP Version
 
