@@ -3,7 +3,7 @@
 namespace MohsenNajafizadeh\TelegramNotifier;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\ClientException;
 use MohsenNajafizadeh\TelegramNotifier\Exceptions\TelegramException;
 
 class Telegram
@@ -39,28 +39,30 @@ class Telegram
             $response = $client->post("/bot{$botToken}/sendMessage", [
                 'form_params' => $formParams,
             ]);
-        } catch (GuzzleException $e) {
-            throw new TelegramException("Failed to send message to Telegram: " . $e->getMessage(), $e->getCode(), $e);
-        }
+            $body = json_decode($response->getBody()->getContents(), true);
 
-        $body = json_decode($response->getBody(), true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new TelegramException("JSON decoding error: " . json_last_error_msg());
-        }
-
-        if (isset($body['ok']) && $body['ok'] === true) {
             return [
-                'header-code' => 200,
+                'headerCode' => $response->getStatusCode(),
                 'status' => 'success',
-                'message' => 'Message sent!',
-                'data' => $body['result'] ?? [],
+                'message' => 'Message sent successfully!',
+                'data' => $body['result']
+            ];
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+            $statusCode = $response->getStatusCode();
+            $body = json_decode($response->getBody()->getContents(), true);
+
+            return [
+                'headerCode' => $statusCode,
+                'status' => 'error',
+                'message' => $body['description'],
+            ];
+        } catch (TelegramException $e) {
+            return [
+                'headerCode' => 500,
+                'status' => 'error',
+                'message' => "An unexpected error occurred: " . $e->getMessage(),
             ];
         }
-
-        throw new TelegramException(
-            "Telegram API error: " . ($body['description'] ?? 'Unknown error'),
-            $body['error_code'] ?? 500
-        );
     }
 }
